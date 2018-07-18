@@ -13,6 +13,7 @@ plugins.push(new webpack.ProvidePlugin({
 }));
 
 if (process.env.NODE_ENV == 'production') {
+    plugins.push(new webpack.optimize.ModuleConcatenationPlugin());
     plugins.push(new optimizeCSSAssetsPlugin({
         cssProcessor: require('cssnano'),
         cssProcessorOptions: {
@@ -26,7 +27,9 @@ if (process.env.NODE_ENV == 'production') {
 }
 
 module.exports = {
-    entry: './app-src/app.js',
+    entry: {
+        app: './app-src/app.js',
+    },
     output: {
         filename: 'bundle.js',
         path: path.resolve(__dirname, 'dist'),
@@ -66,5 +69,10 @@ module.exports = {
             }            
         ]
     },
-    plugins
+    plugins,
+    optimization: {
+        splitChunks: {
+            chunks: 'all'
+        }
+    }
 }
